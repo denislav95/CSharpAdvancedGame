@@ -12,10 +12,7 @@ class SnakeProject
         Console.BufferWidth = Console.WindowWidth = 100;
         int height = Console.WindowHeight/2;
         int width = Console.WindowWidth;
-        List<char> snake = new List<char>();
-        snake.Add('@');
-        
-        //snake.Add();
+
         char[,] matrix = new char[height, width];
         for (int row = 0; row < height; row++)
         {
@@ -33,6 +30,53 @@ class SnakeProject
                 Console.Write(matrix[row,col]);
             }
             Console.WriteLine();
+        }
+        int snakeX = 0;
+        int snakeY = 0;
+
+        while (true)
+        {
+            ConsoleKeyInfo pressedKey = Console.ReadKey();
+            if (pressedKey.Key == ConsoleKey.UpArrow || pressedKey.Key == ConsoleKey.DownArrow)
+            {
+                if (pressedKey.Key == ConsoleKey.UpArrow)
+                {
+                    snakeY--;
+                    if (snakeY < 0)
+                    {
+                        snakeY = 0;
+                    }
+                }
+                else if (pressedKey.Key == ConsoleKey.DownArrow)
+                {
+                    snakeY++;
+                }
+                Console.Clear();
+
+                Console.SetCursorPosition(snakeX, snakeY);
+                Console.Write(SnakeType(type));
+            }
+
+            else if (pressedKey.Key == ConsoleKey.LeftArrow || pressedKey.Key == ConsoleKey.RightArrow)
+            {
+                if (pressedKey.Key == ConsoleKey.LeftArrow)
+                {
+                    snakeX--;
+                    if (snakeX < 0)
+                    {
+                        snakeX = 0;
+                    }
+                }
+                else if (pressedKey.Key == ConsoleKey.RightArrow)
+                {
+                    snakeX++;
+                }
+                Console.Clear();
+
+                Console.SetCursorPosition(snakeX, snakeY);
+                Console.Write(SnakeType(type));
+            }
+
         }
     }
 }
