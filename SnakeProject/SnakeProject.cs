@@ -22,6 +22,13 @@ namespace SnakeProject
     {
         static void Main(string[] args)
         {
+            OpeningScreen();
+            Console.Write("Press :  ");
+            int type = int.Parse(Console.ReadLine());
+            Console.WriteLine("Press Enter to begin!");
+            Console.ReadLine();
+            Console.Clear();
+            Console.CursorVisible = false;
 
             Point[] directions = new Point[]
             {
@@ -79,8 +86,18 @@ namespace SnakeProject
                     Console.Write("*");
                 }
 
-                Thread.Sleep(50);
+                Thread.Sleep(75);
             }
+        }
+        private static void OpeningScreen()
+        {
+            Console.WriteLine("Welcome to Snake Game !");
+            Console.WriteLine();
+            Console.WriteLine("Choose a snake type: ");
+            Console.WriteLine("Press 1 for Avenger:  O");
+            Console.WriteLine("Press 2 for Magician:  *");
+            Console.WriteLine("Press 3 for Warrior:  #");
+            Console.WriteLine("Press 4 for Dark Lord:  @");
         }
     }
 }
