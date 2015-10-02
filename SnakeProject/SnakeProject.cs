@@ -22,12 +22,19 @@ namespace SnakeProject
     {
         static void Main(string[] args)
         {
+            Console.BufferHeight = Console.WindowHeight = 25;
+            Console.BufferWidth = Console.WindowWidth = 50;
+            
             OpeningScreen();
-            Console.Write("Press :  ");
             int type = int.Parse(Console.ReadLine());
-            Console.WriteLine("Press Enter to begin!");
+            Console.WriteLine();
+            Console.WriteLine("Press Enter to see the Instructions!");
             Console.ReadLine();
+
             Console.Clear();
+
+            Instructions();
+            Console.ReadLine();
             Console.CursorVisible = false;
 
             Point[] directions = new Point[]
@@ -47,7 +54,7 @@ namespace SnakeProject
             foreach (Point position in SnakeBody)
             {
                 Console.SetCursorPosition(position.snakeY, position.snakeX);
-                Console.Write("*");
+                Console.Write(SnakeType(type));
             }
 
             while (true)
@@ -83,7 +90,7 @@ namespace SnakeProject
                 foreach (Point position in SnakeBody)
                 {
                     Console.SetCursorPosition(position.snakeY, position.snakeX);
-                    Console.Write("*");
+                    Console.Write(SnakeType(type));
                 }
 
                 Thread.Sleep(75);
@@ -91,13 +98,46 @@ namespace SnakeProject
         }
         private static void OpeningScreen()
         {
+            Console.SetCursorPosition(9,2);
             Console.WriteLine("Welcome to Snake Game !");
             Console.WriteLine();
-            Console.WriteLine("Choose a snake type: ");
-            Console.WriteLine("Press 1 for Avenger:  O");
-            Console.WriteLine("Press 2 for Magician:  *");
-            Console.WriteLine("Press 3 for Warrior:  #");
-            Console.WriteLine("Press 4 for Dark Lord:  @");
+            Console.WriteLine("Choose a snake type: \r\n");
+            Console.WriteLine("Press 1 for Avenger:  OOOOO");
+            Console.WriteLine("Press 2 for Magician:  *****");
+            Console.WriteLine("Press 3 for Warrior:  #####");
+            Console.WriteLine("Press 4 for Dark Lord:  @@@@@\r\n");
+            Console.Write("Press :  ");
+            
+        }
+        private static char SnakeType(int type)
+        {
+            char snake = ' ';
+            switch (type)
+            {
+                case 1:
+                    snake = 'O';
+                    break;
+                case 2:
+                    snake = '*';
+                    break;
+                case 3:
+                    snake = '#';
+                    break;
+                case 4:
+                    snake = '@';
+                    break;
+            }
+            return snake;
+        }
+        private static void Instructions()
+        {
+            Console.SetCursorPosition(0,1);
+            Console.WriteLine("Instructions");
+            Console.WriteLine();
+            Console.WriteLine("Move Up = \"W\"\r\nMove Down = \"S\"\r\nMove Left = \"A\"\r\nMove Right = \"D\"\r\n");
+            Console.WriteLine("Good Luck ! :)\r\n");
+            Console.WriteLine("Press Enter to begin the game !");
+            //After making the food Generator we'll end the instructions
         }
     }
 }
