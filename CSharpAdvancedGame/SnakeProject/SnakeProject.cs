@@ -28,7 +28,7 @@ namespace SnakeProject
             Console.BufferHeight = Console.WindowHeight = 25;
             Console.BufferWidth = Console.WindowWidth = 50;
 
-            int SCORE = 0;
+            int score = 0;
             Console.Title = "Snake";
             OpeningScreen();
             string type = Console.ReadLine();
@@ -51,7 +51,7 @@ namespace SnakeProject
             Point food = new Point(randomGenerator.Next(0, Console.WindowHeight),
                 randomGenerator.Next(0, Console.WindowWidth));
             Console.SetCursorPosition(food.y, food.x);
-            Console.Write("$");
+            Console.Write(nextFood);
 
             Point[] directions = new Point[]
             {
@@ -79,35 +79,19 @@ namespace SnakeProject
                 if (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo Input = Console.ReadKey();
-                    if (Input.Key == ConsoleKey.S)
+                    if (Input.Key == ConsoleKey.S || Input.Key == ConsoleKey.DownArrow)
                     {
                         direction = 0;
                     }
-                    else if (Input.Key == ConsoleKey.DownArrow)
-                    {
-                        direction = 0;
-                    }
-                    if (Input.Key == ConsoleKey.A)
+                    if (Input.Key == ConsoleKey.A || Input.Key == ConsoleKey.LeftArrow)
                     {
                         direction = 3;
                     }
-                    else if (Input.Key == ConsoleKey.LeftArrow)
-                    {
-                        direction = 3;
-                    }
-                    if (Input.Key == ConsoleKey.W)
+                    if (Input.Key == ConsoleKey.W || Input.Key == ConsoleKey.UpArrow)
                     {
                         direction = 1;
                     }
-                    else if (Input.Key == ConsoleKey.UpArrow)
-                    {
-                        direction = 1;
-                    }
-                    if (Input.Key == ConsoleKey.D)
-                    {
-                        direction = 2;
-                    }
-                    else if (Input.Key == ConsoleKey.RightArrow)
+                    if (Input.Key == ConsoleKey.D || Input.Key == ConsoleKey.RightArrow)
                     {
                         direction = 2;
                     }
@@ -116,9 +100,7 @@ namespace SnakeProject
                 Point head = SnakeBody.Last();
                 Point newDirection = directions[direction];
                 Point newHeadPosition = new Point(head.x + newDirection.x, head.y + newDirection.y);
-
-
-
+                
                 if (newHeadPosition.x < 0 || newHeadPosition.y < 0 ||
                     newHeadPosition.x >= Console.WindowHeight || newHeadPosition.y >= Console.WindowWidth)
                 {
@@ -126,7 +108,7 @@ namespace SnakeProject
                     Console.WriteLine("Sorry Dude, GAME OVER !");
                     Console.WriteLine();
                     Console.SetCursorPosition(13, 13);
-                    Console.WriteLine("Your Score is {0}", SCORE);
+                    Console.WriteLine("Your Score is {0}", score);
                     Console.WriteLine();
                     return;
                 }
@@ -143,45 +125,8 @@ namespace SnakeProject
                     food = new Point(randomGenerator.Next(1, Console.WindowHeight - 1),
                 randomGenerator.Next(1, Console.WindowWidth - 1));
 
-                    switch (nextFood)
-                    {
-                        case '1':
-                            SCORE += 1;
-                            break;
-                        case '2':
-                            SCORE += 2;
-                            break;
-                        case '3':
-                            SCORE += 3;
-                            break;
-                        case '4':
-                            SCORE += 4;
-                            break;
-                        case '5':
-                            SCORE += 5;
-                            break;
-                        case '6':
-                            SCORE += 6;
-                            break;
-                        case '7':
-                            SCORE += 7;
-                            break;
-                        case '8':
-                            SCORE += 8;
-                            break;
-                        case '9':
-                            SCORE += 9;
-                            break;
-                        case 'D':
-                            SCORE *= 2; //Doubles the score
-                            break;
-                        case 'T':
-                            SCORE *= 3; //Triples the score
-                            break;
-                        case 'R':
-                            SCORE /= 2; //Divides the score
-                            break;
-                    }
+                    score = Score(nextFood, score);
+
                     nextFood = foodHolder[randomGenerator.Next(0, 11)];
                 }
                 else
@@ -198,10 +143,10 @@ namespace SnakeProject
                 }
                 Console.SetCursorPosition(food.y, food.x);
                 Console.Write(nextFood);
-                Console.Title = "Snake - Score: " + SCORE;
-                if (SCORE < 550)
+                Console.Title = "Snake - Score: " + score;
+                if (score < 550)
                 {
-                    Thread.Sleep(150 - SCORE / 5); //increasing the speed by substracting the current score from the sleep time
+                    Thread.Sleep(150 - score / 5); //increasing the speed by substracting the current score from the sleep time
                 }
                 else
                 {
@@ -223,10 +168,8 @@ namespace SnakeProject
             Console.WriteLine();
             Console.WriteLine("(Leave blank for a random snake body)\r\n");
             Console.Write("Press :  ");
-
         }
-
-
+        
         public static char[] bodyHolder = new char[]
                 {
                     'O', '*', '#', '@'
@@ -269,71 +212,52 @@ namespace SnakeProject
             Console.WriteLine("Difficulty increases as score goes up!");
             Console.WriteLine("Good Luck ! :)\r\n");
             Console.WriteLine("Press Enter to begin the game !");
-            //After making the food Generator we'll end the instructions
+        }
+
+        static int Score(char nextFood, int score)
+        {
+            switch (nextFood)
+            {
+                case '1':
+                    score += 1;
+                    break;
+                case '2':
+                    score += 2;
+                    break;
+                case '3':
+                    score += 3;
+                    break;
+                case '4':
+                    score += 4;
+                    break;
+                case '5':
+                    score += 5;
+                    break;
+                case '6':
+                    score += 6;
+                    break;
+                case '7':
+                    score += 7;
+                    break;
+                case '8':
+                    score += 8;
+                    break;
+                case '9':
+                    score += 9;
+                    break;
+                case 'D':
+                    score *= 2; //Doubles the score
+                    break;
+                case 'T':
+                    score *= 3; //Triples the score
+                    break;
+                case 'R':
+                    score /= 2; //Divides the score
+                    break;
+            }
+            return score;
         }
     }
 }
 
-
-//for (int row = 0; row < height; row++)
-//{
-//    for (int col = 0; col < width; col++)
-//    {
-//        if (col == 0 || col == width - 1)
-//        {
-//            matrix[row, col] = '#'; // sides
-//        }
-//        if (row == 1 || row == height - 1)
-//        {
-//            matrix[row, col] = '#'; //top & bottom
-//        }
-//        
-//    }
-//}
-//
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//while (true)
-//{
-//    ConsoleKeyInfo pressedKey = Console.ReadKey();
-//    if (pressedKey.Key == ConsoleKey.UpArrow || pressedKey.Key == ConsoleKey.DownArrow)
-//    {
-//        if (pressedKey.Key == ConsoleKey.UpArrow)
-//        {
-//            y--;
-//            if (y < 0)
-//            {
-//                y = 0;
-//            }
-//        }
-//        else if (pressedKey.Key == ConsoleKey.DownArrow)
-//        {
-//            y++;
-//        }
-//        Console.Clear();
-
-//        Console.SetCursorPosition(x, y);
-//        Console.Write("$");
-//    }
-
-//    else if (pressedKey.Key == ConsoleKey.LeftArrow || pressedKey.Key == ConsoleKey.RightArrow)
-//    {
-//        if (pressedKey.Key == ConsoleKey.LeftArrow)
-//        {
-//            x--;
-//            if (x < 0)
-//            {
-//                x = 0;
-//            }
-//        }
-//        else if (pressedKey.Key == ConsoleKey.RightArrow)
-//        {
-//            x++;
-//        }
-//        Console.Clear();
-
-//        Console.SetCursorPosition(x, y);
-//        Console.Write("$");
-//    }
-
-//}
 
