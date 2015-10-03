@@ -1,0 +1,8 @@
+Scoring system
+Difficulty system (max diff set to 40ms)
+random snake body
+updated instructions
+changed "snakeX" and "SnakeY" to 'x' and 'y'
+the body method now takes strings
+random food generator
+-------------------------------------------------
