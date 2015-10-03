@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 
 namespace SnakeProject
 {
@@ -24,7 +26,7 @@ namespace SnakeProject
         {
             Console.BufferHeight = Console.WindowHeight = 25;
             Console.BufferWidth = Console.WindowWidth = 50;
-            
+            int SCORE = 0;
             OpeningScreen();
             int type = int.Parse(Console.ReadLine());
             Console.WriteLine();
@@ -37,6 +39,12 @@ namespace SnakeProject
             Console.ReadLine();
             Console.CursorVisible = false;
 
+            Random randomGenerator = new Random();
+            Point food = new Point(randomGenerator.Next(0, Console.WindowHeight),
+                randomGenerator.Next(0, Console.WindowWidth));
+            Console.SetCursorPosition(food.snakeY, food.snakeX);
+            Console.Write("$");
+
             Point[] directions = new Point[]
             {
                 new Point(1, 0), // goingDown
@@ -44,6 +52,7 @@ namespace SnakeProject
                 new Point(0, 1), // goingRight
                 new Point(0, -1) // goingLeft
             };
+
             int direction = 2; // holds the direction which the snake is moving
 
             Queue<Point> SnakeBody = new Queue<Point>();
@@ -79,11 +88,35 @@ namespace SnakeProject
                         direction = 2;
                     }
                 }
-                SnakeBody.Dequeue();
+
                 Point head = SnakeBody.Last();
                 Point newDirection = directions[direction];
                 Point newHeadPosition = new Point(head.snakeX + newDirection.snakeX, head.snakeY + newDirection.snakeY);
+
+                if (newHeadPosition.snakeX < 0 || newHeadPosition.snakeY < 0 ||
+                    newHeadPosition.snakeX >= Console.WindowHeight || newHeadPosition.snakeY >= Console.WindowWidth)
+                {
+                    Console.SetCursorPosition(13, 11);
+                    Console.WriteLine("Sorry Dude, GAME OVER !");
+                    Console.WriteLine();
+                    Console.SetCursorPosition(13,13);
+                    Console.WriteLine("Your Score is {0}", SCORE);
+                    Console.WriteLine();
+                    return;
+                }
+
                 SnakeBody.Enqueue(newHeadPosition);
+
+                if (newHeadPosition.snakeX == food.snakeX && newHeadPosition.snakeY == food.snakeY)
+                {
+                    food = new Point(randomGenerator.Next(0, Console.WindowHeight),
+                randomGenerator.Next(0, Console.WindowWidth));
+                    SCORE++;
+                }
+                else
+                {
+                    SnakeBody.Dequeue();
+                }
 
                 Console.Clear();
 
@@ -93,12 +126,15 @@ namespace SnakeProject
                     Console.Write(SnakeType(type));
                 }
 
-                Thread.Sleep(75);
+                Console.SetCursorPosition(food.snakeY, food.snakeX);
+                Console.Write("$");
+
+                Thread.Sleep(80);
             }
         }
         private static void OpeningScreen()
         {
-            Console.SetCursorPosition(9,2);
+            Console.SetCursorPosition(9, 2);
             Console.WriteLine("Welcome to Snake Game !");
             Console.WriteLine();
             Console.WriteLine("Choose a snake type: \r\n");
@@ -107,7 +143,7 @@ namespace SnakeProject
             Console.WriteLine("Press 3 for Warrior:  #####");
             Console.WriteLine("Press 4 for Dark Lord:  @@@@@\r\n");
             Console.Write("Press :  ");
-            
+
         }
         private static char SnakeType(int type)
         {
@@ -131,7 +167,7 @@ namespace SnakeProject
         }
         private static void Instructions()
         {
-            Console.SetCursorPosition(0,1);
+            Console.SetCursorPosition(0, 1);
             Console.WriteLine("Instructions");
             Console.WriteLine();
             Console.WriteLine("Move Up = \"W\"\r\nMove Down = \"S\"\r\nMove Left = \"A\"\r\nMove Right = \"D\"\r\n");
@@ -143,64 +179,64 @@ namespace SnakeProject
 }
 
 
-            //for (int row = 0; row < height; row++)
-            //{
-            //    for (int col = 0; col < width; col++)
-            //    {
-            //        if (col == 0 || col == width - 1)
-            //        {
-            //            matrix[row, col] = '#'; // sides
-            //        }
-            //        if (row == 1 || row == height - 1)
-            //        {
-            //            matrix[row, col] = '#'; //top & bottom
-            //        }
-            //        
-            //    }
-            //}
-            //
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //while (true)
-            //{
-            //    ConsoleKeyInfo pressedKey = Console.ReadKey();
-            //    if (pressedKey.Key == ConsoleKey.UpArrow || pressedKey.Key == ConsoleKey.DownArrow)
-            //    {
-            //        if (pressedKey.Key == ConsoleKey.UpArrow)
-            //        {
-            //            snakeY--;
-            //            if (snakeY < 0)
-            //            {
-            //                snakeY = 0;
-            //            }
-            //        }
-            //        else if (pressedKey.Key == ConsoleKey.DownArrow)
-            //        {
-            //            snakeY++;
-            //        }
-            //        Console.Clear();
+//for (int row = 0; row < height; row++)
+//{
+//    for (int col = 0; col < width; col++)
+//    {
+//        if (col == 0 || col == width - 1)
+//        {
+//            matrix[row, col] = '#'; // sides
+//        }
+//        if (row == 1 || row == height - 1)
+//        {
+//            matrix[row, col] = '#'; //top & bottom
+//        }
+//        
+//    }
+//}
+//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//while (true)
+//{
+//    ConsoleKeyInfo pressedKey = Console.ReadKey();
+//    if (pressedKey.Key == ConsoleKey.UpArrow || pressedKey.Key == ConsoleKey.DownArrow)
+//    {
+//        if (pressedKey.Key == ConsoleKey.UpArrow)
+//        {
+//            snakeY--;
+//            if (snakeY < 0)
+//            {
+//                snakeY = 0;
+//            }
+//        }
+//        else if (pressedKey.Key == ConsoleKey.DownArrow)
+//        {
+//            snakeY++;
+//        }
+//        Console.Clear();
 
-            //        Console.SetCursorPosition(snakeX, snakeY);
-            //        Console.Write("$");
-            //    }
+//        Console.SetCursorPosition(snakeX, snakeY);
+//        Console.Write("$");
+//    }
 
-            //    else if (pressedKey.Key == ConsoleKey.LeftArrow || pressedKey.Key == ConsoleKey.RightArrow)
-            //    {
-            //        if (pressedKey.Key == ConsoleKey.LeftArrow)
-            //        {
-            //            snakeX--;
-            //            if (snakeX < 0)
-            //            {
-            //                snakeX = 0;
-            //            }
-            //        }
-            //        else if (pressedKey.Key == ConsoleKey.RightArrow)
-            //        {
-            //            snakeX++;
-            //        }
-            //        Console.Clear();
+//    else if (pressedKey.Key == ConsoleKey.LeftArrow || pressedKey.Key == ConsoleKey.RightArrow)
+//    {
+//        if (pressedKey.Key == ConsoleKey.LeftArrow)
+//        {
+//            snakeX--;
+//            if (snakeX < 0)
+//            {
+//                snakeX = 0;
+//            }
+//        }
+//        else if (pressedKey.Key == ConsoleKey.RightArrow)
+//        {
+//            snakeX++;
+//        }
+//        Console.Clear();
 
-            //        Console.SetCursorPosition(snakeX, snakeY);
-            //        Console.Write("$");
-            //    }
+//        Console.SetCursorPosition(snakeX, snakeY);
+//        Console.Write("$");
+//    }
 
-            //}
+//}
