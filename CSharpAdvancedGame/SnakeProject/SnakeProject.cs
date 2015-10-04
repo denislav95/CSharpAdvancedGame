@@ -29,6 +29,9 @@ namespace SnakeProject
             Console.BufferWidth = Console.WindowWidth = 50;
 
             int score = 0;
+            string titleSpeed = "0";
+            int powerup = 0;
+            int speedmodifier = 0;
             Console.Title = "Snake";
             OpeningScreen();
             string type = Console.ReadLine();
@@ -76,6 +79,30 @@ namespace SnakeProject
 
             while (true)
             {
+                speedmodifier = score/2 + powerup;
+                if (score <= 220)
+                {
+                    titleSpeed = Convert.ToString(speedmodifier + 10);
+                }
+                else
+                {
+                    titleSpeed = Convert.ToString(220 + 10 + powerup/2);
+                }
+                if (titleSpeed == Convert.ToString(250))
+                {
+                    titleSpeed = "Max Speed !";
+                }
+                else if (Convert.ToInt32(titleSpeed) <= 10)
+                {
+                    titleSpeed = "Min Speed...";
+                }
+
+                if (speedmodifier<10)
+                {
+                    speedmodifier = 0;
+                }
+                
+                
                 if (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo Input = Console.ReadKey();
@@ -98,7 +125,7 @@ namespace SnakeProject
                     if (Input.Key == ConsoleKey.Spacebar)
                     {
                         direction = 5;
-                        Console.SetCursorPosition(20,11);
+                        Console.SetCursorPosition(20, 11);
                         Console.WriteLine("PAUSE !");
                     }
                 }
@@ -123,7 +150,7 @@ namespace SnakeProject
 
                     char[] foodHolder = new char[]
                     {
-                        '1', '2', '3', '4', '5', '6', '7', '8', '9', 'D', 'T', 'R'
+                        '1', '2', '3', '4', '5', '6', '7', '8', '9', '$', 'S', 'F'
                         // here you can add random bonuses and stuff
                     };
 
@@ -134,8 +161,19 @@ namespace SnakeProject
                             randomGenerator.Next(1, Console.WindowWidth - 1));
 
                         score = Score(nextFood, score);
+                        switch (nextFood)
+                        {
+                            case 'S':
+                                powerup -= randomGenerator.Next(1,15);; // makes it slower
+                                break;
+                            case 'F':
+                                powerup += randomGenerator.Next(1,15); // makes it faster
+                                break;
+                            default:
+                                break;
+                        }
 
-                        nextFood = foodHolder[randomGenerator.Next(0, 11)];
+                        nextFood = foodHolder[randomGenerator.Next(0, foodHolder.Length)];
                     }
                     else
                     {
@@ -151,15 +189,19 @@ namespace SnakeProject
                     }
                     Console.SetCursorPosition(food.y, food.x);
                     Console.Write(nextFood);
-                    Console.Title = "Snake - Score: " + score;
-                    if (score < 550)
+                    Console.Title = "Snake - Score: " + score + " Speed: " + titleSpeed;
+                    if (speedmodifier <= 110)
                     {
-                        Thread.Sleep(150 - score/5);
-                            //increasing the speed by substracting the current score from the sleep time
+                        Thread.Sleep(150 - speedmodifier);
+                        //increasing the speed by substracting the current score from the sleep time
                     }
                     else
                     {
-                        Thread.Sleep(150 - 110); //Max snake speed (can't go below this border)
+                        if (powerup>20)
+                        {
+                            powerup = 20;
+                        }
+                        Thread.Sleep((150 - 110) - powerup); //Max snake speed (can't go below this border)
                     }
                 }
             }
@@ -178,7 +220,7 @@ namespace SnakeProject
             Console.WriteLine("(Leave blank for a random snake body)\r\n");
             Console.Write("Press :  ");
         }
-        
+
         public static char[] bodyHolder = new char[]
                 {
                     'O', '*', '#', '@'
@@ -203,7 +245,7 @@ namespace SnakeProject
                     snake = bodyHolder[3];
                     break;
                 default:
-                    snake = bodyHolder[random]; // not finished
+                    snake = bodyHolder[random];
                     break;
             }
             return snake;
@@ -213,13 +255,12 @@ namespace SnakeProject
             Console.SetCursorPosition(0, 1);
             Console.WriteLine("Instructions");
             Console.WriteLine();
-            Console.WriteLine("Move Up = \"W\" or \"UpArrow\"\r\nMove Down = \"S\" or \"DownArrow\"\r\n" +
-                              "Move Left = \"A\" or \"LeftArrow\"\r\nMove Right = \"D\" or \"RightArrow\"\r\n" +
+            Console.WriteLine("Move Up = \"W\" or \"Up Arrow\"\r\nMove Down = \"S\" or \"Down Arrow\"\r\n" +
+                              "Move Left = \"A\" or \"Left Arrow\"\r\nMove Right = \"D\" or \"Right Arrow\"\r\n" +
                               "PAUSE = \"Space\"\r\n");
             Console.WriteLine("Numbers Increase score.");
-            Console.WriteLine("D - doubles the score.");
-            Console.WriteLine("T - triples it.");
-            Console.WriteLine("R - divides the score.");
+            Console.WriteLine("S - decreases the speed.");
+            Console.WriteLine("F - increases the speed.");
             Console.WriteLine("Difficulty increases as score goes up!\r\n");
             Console.WriteLine("Good Luck ! :)\r\n");
             Console.WriteLine("Press Enter to begin the game !");
@@ -256,19 +297,11 @@ namespace SnakeProject
                 case '9':
                     score += 9;
                     break;
-                case 'D':
-                    score *= 2; //Doubles the score
-                    break;
-                case 'T':
-                    score *= 3; //Triples the score
-                    break;
-                case 'R':
-                    score /= 2; //Divides the score
+                case '$':
+                    score += 25;
                     break;
             }
             return score;
         }
     }
 }
-
-

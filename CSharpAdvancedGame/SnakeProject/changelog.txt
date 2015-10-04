@@ -8,3 +8,6 @@ random food generator
 -------------------------------------------------
 Added color
 Added new moves
+-------------------------------------------------
+New Speed system
+better powerups
