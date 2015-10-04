@@ -95,64 +95,73 @@ namespace SnakeProject
                     {
                         direction = 2;
                     }
+                    if (Input.Key == ConsoleKey.Spacebar)
+                    {
+                        direction = 5;
+                        Console.SetCursorPosition(20,11);
+                        Console.WriteLine("PAUSE !");
+                    }
                 }
-
-                Point head = SnakeBody.Last();
-                Point newDirection = directions[direction];
-                Point newHeadPosition = new Point(head.x + newDirection.x, head.y + newDirection.y);
-                
-                if (newHeadPosition.x < 0 || newHeadPosition.y < 0 ||
-                    newHeadPosition.x >= Console.WindowHeight || newHeadPosition.y >= Console.WindowWidth)
+                if (direction != 5)
                 {
-                    Console.SetCursorPosition(13, 11);
-                    Console.WriteLine("Sorry Dude, GAME OVER !");
-                    Console.WriteLine();
-                    Console.SetCursorPosition(13, 13);
-                    Console.WriteLine("Your Score is {0}", score);
-                    Console.WriteLine();
-                    return;
+                    Point head = SnakeBody.Last();
+                    Point newDirection = directions[direction];
+                    Point newHeadPosition = new Point(head.x + newDirection.x, head.y + newDirection.y);
+
+                    if (newHeadPosition.x < 0 || newHeadPosition.y < 0 ||
+                        newHeadPosition.x >= Console.WindowHeight || newHeadPosition.y >= Console.WindowWidth)
+                    {
+                        Console.SetCursorPosition(13, 9);
+                        Console.WriteLine("Sorry Dude, GAME OVER !");
+                        Console.WriteLine();
+                        Console.SetCursorPosition(13, 11);
+                        Console.WriteLine("Your Score is: {0}", score);
+                        Console.WriteLine();
+                        return;
+                    }
+                    SnakeBody.Enqueue(newHeadPosition);
+
+                    char[] foodHolder = new char[]
+                    {
+                        '1', '2', '3', '4', '5', '6', '7', '8', '9', 'D', 'T', 'R'
+                        // here you can add random bonuses and stuff
+                    };
+
+
+                    if (newHeadPosition.x == food.x && newHeadPosition.y == food.y)
+                    {
+                        food = new Point(randomGenerator.Next(1, Console.WindowHeight - 1),
+                            randomGenerator.Next(1, Console.WindowWidth - 1));
+
+                        score = Score(nextFood, score);
+
+                        nextFood = foodHolder[randomGenerator.Next(0, 11)];
+                    }
+                    else
+                    {
+                        SnakeBody.Dequeue();
+                    }
+
+                    Console.Clear();
+
+                    foreach (Point position in SnakeBody)
+                    {
+                        Console.SetCursorPosition(position.y, position.x);
+                        Console.Write(SnakeType(type, randomSnake));
+                    }
+                    Console.SetCursorPosition(food.y, food.x);
+                    Console.Write(nextFood);
+                    Console.Title = "Snake - Score: " + score;
+                    if (score < 550)
+                    {
+                        Thread.Sleep(150 - score/5);
+                            //increasing the speed by substracting the current score from the sleep time
+                    }
+                    else
+                    {
+                        Thread.Sleep(150 - 110); //Max snake speed (can't go below this border)
+                    }
                 }
-                SnakeBody.Enqueue(newHeadPosition);
-
-                char[] foodHolder = new char[]
-                {
-                    '1', '2', '3', '4', '5', '6', '7', '8', '9', 'D', 'T', 'R' // here you can add random bonuses and stuff
-                };
-
-
-                if (newHeadPosition.x == food.x && newHeadPosition.y == food.y)
-                {
-                    food = new Point(randomGenerator.Next(1, Console.WindowHeight - 1),
-                randomGenerator.Next(1, Console.WindowWidth - 1));
-
-                    score = Score(nextFood, score);
-
-                    nextFood = foodHolder[randomGenerator.Next(0, 11)];
-                }
-                else
-                {
-                    SnakeBody.Dequeue();
-                }
-
-                Console.Clear();
-
-                foreach (Point position in SnakeBody)
-                {
-                    Console.SetCursorPosition(position.y, position.x);
-                    Console.Write(SnakeType(type, randomSnake));
-                }
-                Console.SetCursorPosition(food.y, food.x);
-                Console.Write(nextFood);
-                Console.Title = "Snake - Score: " + score;
-                if (score < 550)
-                {
-                    Thread.Sleep(150 - score / 5); //increasing the speed by substracting the current score from the sleep time
-                }
-                else
-                {
-                    Thread.Sleep(150 - 110); //Max snake speed (can't go below this border)
-                }
-
             }
         }
         private static void OpeningScreen()
@@ -204,12 +213,14 @@ namespace SnakeProject
             Console.SetCursorPosition(0, 1);
             Console.WriteLine("Instructions");
             Console.WriteLine();
-            Console.WriteLine("Move Up = \"W\" or \"UpArrow\"\r\nMove Down = \"S\" or \"DownArrow\"\r\nMove Left = \"A\" or \"LeftArrow\"\r\nMove Right = \"D\" or \"RightArrow\"\r\n");
+            Console.WriteLine("Move Up = \"W\" or \"UpArrow\"\r\nMove Down = \"S\" or \"DownArrow\"\r\n" +
+                              "Move Left = \"A\" or \"LeftArrow\"\r\nMove Right = \"D\" or \"RightArrow\"\r\n" +
+                              "PAUSE = \"Space\"\r\n");
             Console.WriteLine("Numbers Increase score.");
             Console.WriteLine("D - doubles the score.");
             Console.WriteLine("T - triples it.");
             Console.WriteLine("R - divides the score.");
-            Console.WriteLine("Difficulty increases as score goes up!");
+            Console.WriteLine("Difficulty increases as score goes up!\r\n");
             Console.WriteLine("Good Luck ! :)\r\n");
             Console.WriteLine("Press Enter to begin the game !");
         }
