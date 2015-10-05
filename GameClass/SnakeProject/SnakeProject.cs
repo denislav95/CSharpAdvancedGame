@@ -109,7 +109,7 @@ namespace SnakeProject
                     ConsoleKeyInfo Input = Console.ReadKey();
                     if (Input.Key == ConsoleKey.S || Input.Key == ConsoleKey.DownArrow)
                     {
-                        if (direction!=1)
+                        if (direction != 1)
                         {
                             direction = 0;
                         }
