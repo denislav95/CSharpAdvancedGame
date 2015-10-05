@@ -109,19 +109,31 @@ namespace SnakeProject
                     ConsoleKeyInfo Input = Console.ReadKey();
                     if (Input.Key == ConsoleKey.S || Input.Key == ConsoleKey.DownArrow)
                     {
-                        direction = 0;
+                        if (direction!=1)
+                        {
+                            direction = 0;
+                        }
                     }
                     if (Input.Key == ConsoleKey.A || Input.Key == ConsoleKey.LeftArrow)
                     {
-                        direction = 3;
+                        if (direction != 2)
+                        {
+                            direction = 3;
+                        }
                     }
                     if (Input.Key == ConsoleKey.W || Input.Key == ConsoleKey.UpArrow)
                     {
-                        direction = 1;
+                        if (direction != 0)
+                        {
+                            direction = 1;
+                        }
                     }
                     if (Input.Key == ConsoleKey.D || Input.Key == ConsoleKey.RightArrow)
                     {
-                        direction = 2;
+                        if (direction != 3)
+                        {
+                            direction = 2;
+                        }
                     }
                     if (Input.Key == ConsoleKey.Spacebar)
                     {
