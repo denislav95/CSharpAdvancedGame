@@ -28,7 +28,7 @@ namespace SnakeProject
             Console.ForegroundColor = ConsoleColor.Green;
             Console.BufferHeight = Console.WindowHeight = 25;
             Console.BufferWidth = Console.WindowWidth = 50;
-
+            
             int score = 0;
             string titleSpeed = "0";
             int powerup = 0;
@@ -38,8 +38,18 @@ namespace SnakeProject
             string type = Console.ReadLine();
             char nextFood = '1';
             Console.WriteLine();
+            Console.WriteLine("Press Enter to choose a level!");
+            Console.ReadLine();
+            Console.Clear();
+            Console.SetCursorPosition(0,3);
+            Console.WriteLine("Choose Level from 1 to 9 and press Enter!");
+            Console.SetCursorPosition(0, 5);
+            Console.Write("Level : ");
+            string level = Console.ReadLine();
+            Console.SetCursorPosition(0, 7);
             Console.WriteLine("Press Enter to see the Instructions!");
             Console.ReadLine();
+
 
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Red;
@@ -171,7 +181,6 @@ namespace SnakeProject
                     {
                         food = new Point(randomGenerator.Next(1, Console.WindowHeight - 1),
                             randomGenerator.Next(1, Console.WindowWidth - 1));
-
                         score = Score(nextFood, score);
                         switch (nextFood)
                         {
@@ -238,6 +247,7 @@ namespace SnakeProject
             }
         }
 
+
         private static void OpeningScreen()
         {
             Console.SetCursorPosition(9, 2);
@@ -258,7 +268,7 @@ namespace SnakeProject
                     'O', '*', '#', '@'
                 };
 
-        private static char SnakeType(string type, int random)
+        public static char SnakeType(string type, int random)
         {
             char snake = ' ';
 
@@ -282,7 +292,8 @@ namespace SnakeProject
             }
             return snake;
         }
-        private static void Instructions()
+
+        public static void Instructions()
         {
             Console.SetCursorPosition(0, 1);
             Console.WriteLine("Instructions");

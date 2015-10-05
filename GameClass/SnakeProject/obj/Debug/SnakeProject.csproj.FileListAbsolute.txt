@@ -4,3 +4,9 @@ c:\users\rossen\documents\visual studio 2013\Projects\GameClass\SnakeProject\bin
 c:\users\rossen\documents\visual studio 2013\Projects\GameClass\SnakeProject\obj\Debug\SnakeProject.csprojResolveAssemblyReference.cache
 c:\users\rossen\documents\visual studio 2013\Projects\GameClass\SnakeProject\obj\Debug\SnakeProject.exe
 c:\users\rossen\documents\visual studio 2013\Projects\GameClass\SnakeProject\obj\Debug\SnakeProject.pdb
+C:\Users\pc1\Desktop\Project\CSharpAdvancedGame\GameClass\SnakeProject\bin\Debug\SnakeProject.exe.config
+C:\Users\pc1\Desktop\Project\CSharpAdvancedGame\GameClass\SnakeProject\obj\Debug\SnakeProject.exe
+C:\Users\pc1\Desktop\Project\CSharpAdvancedGame\GameClass\SnakeProject\obj\Debug\SnakeProject.pdb
+C:\Users\pc1\Desktop\Project\CSharpAdvancedGame\GameClass\SnakeProject\bin\Debug\SnakeProject.exe
+C:\Users\pc1\Desktop\Project\CSharpAdvancedGame\GameClass\SnakeProject\bin\Debug\SnakeProject.pdb
+C:\Users\pc1\Desktop\Project\CSharpAdvancedGame\GameClass\SnakeProject\obj\Debug\SnakeProject.csprojResolveAssemblyReference.cache
