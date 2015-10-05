@@ -28,7 +28,7 @@ namespace SnakeProject
             Console.ForegroundColor = ConsoleColor.Green;
             Console.BufferHeight = Console.WindowHeight = 25;
             Console.BufferWidth = Console.WindowWidth = 50;
-            
+
             int score = 0;
             string titleSpeed = "0";
             int powerup = 0;
@@ -41,11 +41,21 @@ namespace SnakeProject
             Console.WriteLine("Press Enter to choose a level!");
             Console.ReadLine();
             Console.Clear();
-            Console.SetCursorPosition(0,3);
+            Console.SetCursorPosition(0, 3);
             Console.WriteLine("Choose Level from 1 to 9 and press Enter!");
             Console.SetCursorPosition(0, 5);
             Console.Write("Level : ");
-            string level = Console.ReadLine();
+            int level = 0;
+            string levelAssigner = Console.ReadLine();
+            if (Convert.ToInt32(levelAssigner) <= 9 && Convert.ToInt32(levelAssigner) > 0)
+            {
+                level = Convert.ToInt32(levelAssigner);
+            }
+            else
+            {
+                level = 0;
+            }
+
             Console.SetCursorPosition(0, 7);
             Console.WriteLine("Press Enter to see the Instructions!");
             Console.ReadLine();
@@ -90,29 +100,6 @@ namespace SnakeProject
 
             while (true)
             {
-                speedmodifier = score / 2 + powerup;
-                if (score <= 220)
-                {
-                    titleSpeed = Convert.ToString(speedmodifier + 10);
-                }
-                else
-                {
-                    titleSpeed = Convert.ToString(220 + 10 + powerup / 2);
-                }
-                if (titleSpeed == Convert.ToString(250))
-                {
-                    titleSpeed = "Max Speed !";
-                }
-                else if (Convert.ToInt32(titleSpeed) <= 10)
-                {
-                    titleSpeed = "Min Speed...";
-                }
-
-                if (speedmodifier < 10)
-                {
-                    speedmodifier = 0;
-                }
-
 
                 if (Console.KeyAvailable)
                 {
@@ -182,17 +169,6 @@ namespace SnakeProject
                         food = new Point(randomGenerator.Next(1, Console.WindowHeight - 1),
                             randomGenerator.Next(1, Console.WindowWidth - 1));
                         score = Score(nextFood, score);
-                        switch (nextFood)
-                        {
-                            case 'S':
-                                powerup -= randomGenerator.Next(1, 15); ; // makes it slower
-                                break;
-                            case 'F':
-                                powerup += randomGenerator.Next(1, 15); // makes it faster
-                                break;
-                            default:
-                                break;
-                        }
 
                         nextFood = foodHolder[randomGenerator.Next(0, foodHolder.Length)];
                     }
@@ -211,19 +187,9 @@ namespace SnakeProject
                     Console.SetCursorPosition(food.y, food.x);
                     Console.Write(nextFood);
                     Console.Title = "Snake - Score: " + score + " Speed: " + titleSpeed;
-                    if (speedmodifier <= 110)
-                    {
-                        Thread.Sleep(150 - speedmodifier);
-                        //increasing the speed by substracting the current score from the sleep time
-                    }
-                    else
-                    {
-                        if (powerup > 20)
-                        {
-                            powerup = 20;
-                        }
-                        Thread.Sleep((150 - 110) - powerup); //Max snake speed (can't go below this border)
-                    }
+
+                    Thread.Sleep(150 - Convert.ToInt32(level) * 12);
+
                 }
             }
         }
@@ -301,10 +267,8 @@ namespace SnakeProject
             Console.WriteLine("Move Up = \"W\" or \"Up Arrow\"\r\nMove Down = \"S\" or \"Down Arrow\"\r\n" +
                               "Move Left = \"A\" or \"Left Arrow\"\r\nMove Right = \"D\" or \"Right Arrow\"\r\n" +
                               "PAUSE = \"Space\"\r\n");
-            Console.WriteLine("Numbers Increase score.");
-            Console.WriteLine("S - decreases the speed.");
-            Console.WriteLine("F - increases the speed.");
-            Console.WriteLine("Difficulty increases as score goes up!\r\n");
+            Console.WriteLine("Numbers Increase score.\r\n");
+
             Console.WriteLine("Good Luck ! :)\r\n");
             Console.WriteLine("Press Enter to begin the game !");
         }
