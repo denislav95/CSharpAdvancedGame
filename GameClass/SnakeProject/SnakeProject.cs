@@ -34,6 +34,7 @@ namespace SnakeProject
             int powerup = 0;
             int speedmodifier = 0;
             Console.Title = "Snake";
+
             OpeningScreen();
             string type = Console.ReadLine();
             char nextFood = '1';
@@ -41,15 +42,23 @@ namespace SnakeProject
             Console.WriteLine("Press Enter to choose a level!");
             Console.ReadLine();
             Console.Clear();
+
             Console.SetCursorPosition(0, 3);
             Console.WriteLine("Choose Level from 1 to 9 and press Enter!");
             Console.SetCursorPosition(0, 5);
             Console.Write("Level : ");
             int level = 0;
             string levelAssigner = Console.ReadLine();
-            if (Convert.ToInt32(levelAssigner) <= 9 && Convert.ToInt32(levelAssigner) > 0)
+            if (int.TryParse(levelAssigner, out level))
             {
-                level = Convert.ToInt32(levelAssigner);
+                if (level <= 9 && level > 0)
+                {
+                    level = Convert.ToInt32(levelAssigner);
+                }
+                else
+                {
+                    level = 0;
+                }
             }
             else
             {
@@ -188,7 +197,7 @@ namespace SnakeProject
                     Console.Write(nextFood);
                     Console.Title = "Snake - Score: " + score + " Speed: " + titleSpeed;
 
-                    Thread.Sleep(150 - Convert.ToInt32(level) * 12);
+                    Thread.Sleep(150 - level * 12);
 
                 }
             }
