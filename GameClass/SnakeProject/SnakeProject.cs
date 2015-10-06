@@ -344,3 +344,28 @@ namespace SnakeProject
         }
     }
 }
+/*          //Unfinished
+            //To-Do's: Create new method TopTenHighScores, read player name, compare player score to high scores, print top scores accordingly.
+             
+            Dictionary<string, int> topTenHighScore = new Dictionary<string, int>();
+            var array = File.ReadAllLines("highscores2.txt");
+            for (var i = 0; i < array.Length; i += 2)
+            {
+                topTenHighScore.Add(array[i + 1], int.Parse(array[i]));
+                
+            }
+
+            var items = from pair in topTenHighScore orderby pair.Value descending select pair;
+
+            int counter = 1;
+
+            foreach (var item in items)
+            {
+                
+                Console.WriteLine("{0}.{1}{2}{3}{4}", counter,new string(' ',2 -counter.ToString().Length), item.Key,
+                new string(' ',15 - item.Key.Length), item.Value);
+                counter++;
+            }
+            
+            Console.WriteLine(topTenHighScore.Values.Min());
+*/
