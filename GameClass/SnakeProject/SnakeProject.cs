@@ -31,8 +31,8 @@ namespace SnakeProject
 
             int score = 0;
             string titleSpeed = "0";
-            int powerup = 0;
-            int speedmodifier = 0;
+            int lastFoodTime = 0;
+            int foodDissapearTime = 4000;
             Console.Title = "Snake";
 
             OpeningScreen();
@@ -68,6 +68,7 @@ namespace SnakeProject
 
             Point food = new Point(randomGenerator.Next(0, Console.WindowHeight),
                 randomGenerator.Next(0, Console.WindowWidth));
+            lastFoodTime = Environment.TickCount;
             Console.SetCursorPosition(food.y, food.x);
             Console.Write(nextFood);
 
@@ -138,11 +139,13 @@ namespace SnakeProject
                     Point head = SnakeBody.Last();
                     Point newDirection = directions[direction];
                     Point newHeadPosition = new Point(head.x + newDirection.x, head.y + newDirection.y);
+                    if (newHeadPosition.y < 0) newHeadPosition.y = Console.WindowWidth - 1;
+                    if (newHeadPosition.x < 0) newHeadPosition.x = Console.WindowHeight - 1;
+                    if (newHeadPosition.x >= Console.WindowHeight) newHeadPosition.x = 0;
+                    if (newHeadPosition.y >= Console.WindowWidth) newHeadPosition.y = 0;
+                    
 
-                    if (newHeadPosition.x < 0 || newHeadPosition.y < 0 ||
-                        newHeadPosition.x >= Console.WindowHeight ||
-                        newHeadPosition.y >= Console.WindowWidth ||
-                        SnakeBody.Contains(newHeadPosition))
+                    if (SnakeBody.Contains(newHeadPosition))
                     {
                         Console.SetCursorPosition(13, 9);
                         Console.WriteLine("Sorry Dude, GAME OVER !");
@@ -165,7 +168,7 @@ namespace SnakeProject
                         food = new Point(randomGenerator.Next(1, Console.WindowHeight - 1),
                             randomGenerator.Next(1, Console.WindowWidth - 1));
                         score = Score(nextFood, score);
-
+                        lastFoodTime = Environment.TickCount;
                         nextFood = foodHolder[randomGenerator.Next(0, foodHolder.Length)];
                     }
                     else
@@ -180,6 +183,18 @@ namespace SnakeProject
                         Console.SetCursorPosition(position.y, position.x);
                         Console.Write(SnakeType(type, randomSnake));
                     }
+                    if (Environment.TickCount - lastFoodTime >= foodDissapearTime)
+                    {
+                        Console.SetCursorPosition(food.y, food.x);
+                        Console.Write(" ");
+                        do
+                        {
+                            food = new Point(randomGenerator.Next(0, Console.WindowHeight),
+                                randomGenerator.Next(0, Console.WindowWidth));
+                        } while (SnakeBody.Contains(food));
+                        lastFoodTime = Environment.TickCount;
+                    }
+
                     Console.SetCursorPosition(food.y, food.x);
                     Console.Write(nextFood);
                     Console.Title = "Snake - Score: " + score + " Speed: " + titleSpeed;
