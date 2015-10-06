@@ -49,33 +49,18 @@ namespace SnakeProject
             Console.Write("Level : ");
             int level = 0;
             string levelAssigner = Console.ReadLine();
-            if (int.TryParse(levelAssigner, out level))
-            {
-                if (level <= 9 && level > 0)
-                {
-                    level = Convert.ToInt32(levelAssigner);
-                }
-                else
-                {
-                    level = 0;
-                }
-            }
-            else
-            {
-                level = 0;
-            }
+            level = GameLevel(levelAssigner);
 
             Console.SetCursorPosition(0, 7);
             Console.WriteLine("Press Enter to see the Instructions!");
             Console.ReadLine();
-
-
             Console.Clear();
+
             Console.ForegroundColor = ConsoleColor.Red;
             Instructions();
-            Console.BackgroundColor = ConsoleColor.Black;
             Console.ReadLine();
             Console.CursorVisible = false;
+
             Console.ForegroundColor = ConsoleColor.Yellow;
 
             Random randomGenerator = new Random();
@@ -155,7 +140,9 @@ namespace SnakeProject
                     Point newHeadPosition = new Point(head.x + newDirection.x, head.y + newDirection.y);
 
                     if (newHeadPosition.x < 0 || newHeadPosition.y < 0 ||
-                        newHeadPosition.x >= Console.WindowHeight || newHeadPosition.y >= Console.WindowWidth)
+                        newHeadPosition.x >= Console.WindowHeight ||
+                        newHeadPosition.y >= Console.WindowWidth ||
+                        SnakeBody.Contains(newHeadPosition))
                     {
                         Console.SetCursorPosition(13, 9);
                         Console.WriteLine("Sorry Dude, GAME OVER !");
@@ -318,6 +305,27 @@ namespace SnakeProject
                     break;
             }
             return score;
+        }
+
+        public static int GameLevel(string levelAssigner)
+        {
+            int level = 0;
+            if (int.TryParse(levelAssigner, out level))
+            {
+                if (level <= 9 && level > 0)
+                {
+                    level = Convert.ToInt32(levelAssigner);
+                }
+                else
+                {
+                    level = 0;
+                }
+            }
+            else
+            {
+                level = 0;
+            }
+            return level;
         }
     }
 }
