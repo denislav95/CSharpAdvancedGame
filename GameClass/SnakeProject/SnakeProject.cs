@@ -32,7 +32,6 @@ namespace SnakeProject
             int score = 0;
             string titleSpeed = "0";
             int lastFoodTime = 0;
-            int foodDissapearTime = 4000;
             Console.Title = "Snake";
 
             OpeningScreen();
@@ -50,6 +49,7 @@ namespace SnakeProject
             int level = 0;
             string levelAssigner = Console.ReadLine();
             level = GameLevel(levelAssigner);
+            int foodDissapearTime = (4000 * 9) / (level*3/2+1);
 
             Console.SetCursorPosition(0, 7);
             Console.WriteLine("Press Enter to see the Instructions!");
@@ -158,7 +158,7 @@ namespace SnakeProject
 
                     char[] foodHolder = new char[]
                     {
-                        '1', '2', '3', '4', '5', '6', '7', '8', '9', '$', 'S', 'F'
+                        '1', '2', '3', '4', '5', '6', '7', '8', '9', '$'
                         // here you can add random bonuses and stuff
                     };
 
