@@ -42,16 +42,19 @@ namespace SnakeProject
             Console.ReadLine();
             Console.Clear();
 
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.SetCursorPosition(0, 3);
             Console.WriteLine("Choose Level from 1 to 9 and press Enter!");
             Console.SetCursorPosition(0, 5);
+            Console.WriteLine("(Leave blank for 1 level)");
+            Console.SetCursorPosition(0, 7);
             Console.Write("Level : ");
             int level = 0;
             string levelAssigner = Console.ReadLine();
             level = GameLevel(levelAssigner);
             int foodDissapearTime = (4000 * 9) / (level*3/2+1);
 
-            Console.SetCursorPosition(0, 7);
+            Console.SetCursorPosition(0, 9);
             Console.WriteLine("Press Enter to see the Instructions!");
             Console.ReadLine();
             Console.Clear();
@@ -139,6 +142,7 @@ namespace SnakeProject
                     Point head = SnakeBody.Last();
                     Point newDirection = directions[direction];
                     Point newHeadPosition = new Point(head.x + newDirection.x, head.y + newDirection.y);
+
                     if (newHeadPosition.y < 0) newHeadPosition.y = Console.WindowWidth - 1;
                     if (newHeadPosition.x < 0) newHeadPosition.x = Console.WindowHeight - 1;
                     if (newHeadPosition.x >= Console.WindowHeight) newHeadPosition.x = 0;
@@ -154,17 +158,46 @@ namespace SnakeProject
                         EndScoreResults(score);
                         return;
                     }
+
+                    Console.SetCursorPosition(head.y, head.x);
+
                     SnakeBody.Enqueue(newHeadPosition);
+
+                    Console.SetCursorPosition(newHeadPosition.y, newHeadPosition.x);
 
                     char[] foodHolder = new char[]
                     {
-                        '1', '2', '3', '4', '5', '6', '7', '8', '9', '$'
+                        '1', '2', '3', '4', '5', '6', '7', '8', '9', '$', 'Y', 'W', 'B', 'G', 'R', 'D'
                         // here you can add random bonuses and stuff
                     };
 
 
                     if (newHeadPosition.x == food.x && newHeadPosition.y == food.y)
                     {
+                        if (nextFood == 'Y')
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                        }
+                        else if (nextFood == 'W')
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        else if (nextFood == 'B')
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                        }
+                        else if (nextFood == 'G')
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkGray;
+                        }
+                        else if (nextFood == 'R')
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                        }
+                        else if (nextFood == 'D')
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        }
                         food = new Point(randomGenerator.Next(1, Console.WindowHeight - 1),
                             randomGenerator.Next(1, Console.WindowWidth - 1));
                         score = Score(nextFood, score);
@@ -279,7 +312,8 @@ namespace SnakeProject
                               "Move Left = \"A\" or \"Left Arrow\"\r\nMove Right = \"D\" or \"Right Arrow\"\r\n" +
                               "PAUSE = \"Space\"\r\n");
             Console.WriteLine("Numbers Increase score.\r\n");
-
+            Console.WriteLine("Special Food: \r\n\"B\" = Blue Snake\r\n\"W\" = White Snake\r\n\"R\" = Red Snake" +
+                              "\r\n\"G\" = Dark Grey Snake\r\n\"D\" = Dark Green Snake\r\n\"Y\" = Yellow Snake\r\n");
             Console.WriteLine("Good Luck ! :)\r\n");
             Console.WriteLine("Press Enter to begin the game !");
         }
