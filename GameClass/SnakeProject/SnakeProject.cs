@@ -10,7 +10,7 @@ using System.IO;
 
 namespace SnakeProject
 {
-    class Point
+    struct Point
     {
         public int x;
         public int y;
