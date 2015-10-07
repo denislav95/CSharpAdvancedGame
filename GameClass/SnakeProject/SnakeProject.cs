@@ -32,6 +32,7 @@ namespace SnakeProject
             int score = 0;
             string titleSpeed = "0";
             int lastFoodTime = 0;
+            int savedDirection = 10;
             Console.Title = "Snake";
 
             OpeningScreen();
@@ -52,7 +53,7 @@ namespace SnakeProject
             int level = 0;
             string levelAssigner = Console.ReadLine();
             level = GameLevel(levelAssigner);
-            int foodDissapearTime = (4000 * 9) / (level*3/2+1);
+            int foodDissapearTime = (4000 * 9) / (level * 3 / 2 + 1);
 
             Console.SetCursorPosition(0, 9);
             Console.WriteLine("Press Enter to see the Instructions!");
@@ -69,11 +70,6 @@ namespace SnakeProject
             Random randomGenerator = new Random();
             int randomSnake = randomGenerator.Next(0, 4);
 
-            Point food = new Point(randomGenerator.Next(0, Console.WindowHeight),
-                randomGenerator.Next(0, Console.WindowWidth));
-            lastFoodTime = Environment.TickCount;
-            Console.SetCursorPosition(food.y, food.x);
-            Console.Write(nextFood);
 
             Point[] directions = new Point[]
             {
@@ -85,16 +81,27 @@ namespace SnakeProject
 
             int direction = 2; // holds the direction which the snake is moving
 
-            Queue<Point> SnakeBody = new Queue<Point>();
+            Queue<Point> snakeBody = new Queue<Point>();
             for (int i = 0; i < 5; i++)
             {
-                SnakeBody.Enqueue(new Point(0, i));
+                snakeBody.Enqueue(new Point(0, i));
             }
-            foreach (Point position in SnakeBody)
+            foreach (Point position in snakeBody)
             {
                 Console.SetCursorPosition(position.y, position.x);
                 Console.Write(SnakeType(type, randomSnake));
             }
+
+            Point food = new Point(randomGenerator.Next(0, Console.WindowHeight),
+                randomGenerator.Next(0, Console.WindowWidth));
+            lastFoodTime = Environment.TickCount;
+            while (snakeBody.Contains(food)) 
+            {
+                food = new Point(randomGenerator.Next(0, Console.WindowHeight),
+                randomGenerator.Next(0, Console.WindowWidth));
+            }
+            Console.SetCursorPosition(food.y, food.x);
+            Console.Write(nextFood);
 
             while (true)
             {
@@ -104,34 +111,35 @@ namespace SnakeProject
                     ConsoleKeyInfo Input = Console.ReadKey();
                     if (Input.Key == ConsoleKey.S || Input.Key == ConsoleKey.DownArrow)
                     {
-                        if (direction != 1)
+                        if (direction != 1 && savedDirection != 1)
                         {
                             direction = 0;
                         }
                     }
                     if (Input.Key == ConsoleKey.A || Input.Key == ConsoleKey.LeftArrow)
                     {
-                        if (direction != 2)
+                        if (direction != 2 && savedDirection != 2)
                         {
                             direction = 3;
                         }
                     }
                     if (Input.Key == ConsoleKey.W || Input.Key == ConsoleKey.UpArrow)
                     {
-                        if (direction != 0)
+                        if (direction != 0 && savedDirection != 0)
                         {
                             direction = 1;
                         }
                     }
                     if (Input.Key == ConsoleKey.D || Input.Key == ConsoleKey.RightArrow)
                     {
-                        if (direction != 3)
+                        if (direction != 3 && savedDirection != 3)
                         {
                             direction = 2;
                         }
                     }
                     if (Input.Key == ConsoleKey.Spacebar)
                     {
+                        savedDirection = direction;
                         direction = 5;
                         Console.SetCursorPosition(20, 11);
                         Console.WriteLine("PAUSE !");
@@ -139,7 +147,8 @@ namespace SnakeProject
                 }
                 if (direction != 5)
                 {
-                    Point head = SnakeBody.Last();
+                    savedDirection = 10;
+                    Point head = snakeBody.Last();
                     Point newDirection = directions[direction];
                     Point newHeadPosition = new Point(head.x + newDirection.x, head.y + newDirection.y);
 
@@ -147,9 +156,9 @@ namespace SnakeProject
                     if (newHeadPosition.x < 0) newHeadPosition.x = Console.WindowHeight - 1;
                     if (newHeadPosition.x >= Console.WindowHeight) newHeadPosition.x = 0;
                     if (newHeadPosition.y >= Console.WindowWidth) newHeadPosition.y = 0;
-                    
 
-                    if (SnakeBody.Contains(newHeadPosition))
+
+                    if (snakeBody.Contains(newHeadPosition))
                     {
                         EndGameResults(score);
                         return;
@@ -157,7 +166,7 @@ namespace SnakeProject
 
                     Console.SetCursorPosition(head.y, head.x);
 
-                    SnakeBody.Enqueue(newHeadPosition);
+                    snakeBody.Enqueue(newHeadPosition);
 
                     Console.SetCursorPosition(newHeadPosition.y, newHeadPosition.x);
 
@@ -197,17 +206,22 @@ namespace SnakeProject
                         food = new Point(randomGenerator.Next(1, Console.WindowHeight - 1),
                             randomGenerator.Next(1, Console.WindowWidth - 1));
                         score = Score(nextFood, score);
+                        while (snakeBody.Contains(food))
+                        {
+                            food = new Point(randomGenerator.Next(0, Console.WindowHeight),
+                            randomGenerator.Next(0, Console.WindowWidth));
+                        }
                         lastFoodTime = Environment.TickCount;
                         nextFood = foodHolder[randomGenerator.Next(0, foodHolder.Length)];
                     }
                     else
                     {
-                        SnakeBody.Dequeue();
+                        snakeBody.Dequeue();
                     }
 
                     Console.Clear();
 
-                    foreach (Point position in SnakeBody)
+                    foreach (Point position in snakeBody)
                     {
                         Console.SetCursorPosition(position.y, position.x);
                         Console.Write(SnakeType(type, randomSnake));
@@ -220,13 +234,13 @@ namespace SnakeProject
                         {
                             food = new Point(randomGenerator.Next(0, Console.WindowHeight),
                                 randomGenerator.Next(0, Console.WindowWidth));
-                        } while (SnakeBody.Contains(food));
+                        } while (snakeBody.Contains(food));
                         lastFoodTime = Environment.TickCount;
                     }
 
                     Console.SetCursorPosition(food.y, food.x);
                     Console.Write(nextFood);
-                    Console.Title = "Snake - Score: " + score + " Speed: " + titleSpeed;
+                    Console.Title = "Snake - Score: " + score;
 
                     Thread.Sleep(150 - level * 12);
 
@@ -483,6 +497,24 @@ namespace SnakeProject
                     break;
                 case '9':
                     score += 9;
+                    break;
+                case 'B':
+                    score += 10;
+                    break;
+                case 'W':
+                    score += 10;
+                    break;
+                case 'R':
+                    score += 10;
+                    break;
+                case 'G':
+                    score += 10;
+                    break;
+                case 'Y':
+                    score += 10;
+                    break;
+                case 'D':
+                    score += 10;
                     break;
                 case '$':
                     score += 25;
