@@ -151,11 +151,7 @@ namespace SnakeProject
 
                     if (SnakeBody.Contains(newHeadPosition))
                     {
-                        Console.SetCursorPosition(13, 9);
-                        Console.WriteLine("Sorry Dude, GAME OVER !");
-                        Console.WriteLine();
-                        Console.SetCursorPosition(13, 11);
-                        EndScoreResults(score);
+                        EndGameResults(score);
                         return;
                     }
 
@@ -238,25 +234,164 @@ namespace SnakeProject
             }
         }
 
-        public static void EndScoreResults(int score)
+        public static void EndGameResults(int score)
         {
-            var highScore = File.ReadAllText("highscore.txt");
-            if (score > int.Parse(highScore))
+            StringBuilder builder = new StringBuilder();
+            int counter = 0;
+
+            Dictionary<string, int> topTenHighScore = new Dictionary<string, int>();
+            var array = File.ReadAllLines("highscores2.txt");
+
+            for (var i = 0; i < array.Length; i += 2)
             {
-                Console.WriteLine("New High Score: {0}", score);
-                Console.WriteLine();
-                File.WriteAllText("highscore.txt", score.ToString());
+                topTenHighScore.Add(array[i + 1], int.Parse(array[i]));
             }
-            else
+            var items = from pair in topTenHighScore orderby pair.Value descending select pair;
+
+            Console.Clear();
+            Console.SetCursorPosition(13, 3);
+            Console.WriteLine("Sorry Dude, GAME OVER!");
+            if (score > topTenHighScore.Values.Max())
             {
-                Console.WriteLine("Your Score: {0}", score);
-                Console.WriteLine();
-                Console.SetCursorPosition(13, 13);
-                Console.WriteLine("High Score: {0}", int.Parse(highScore));
-                Console.WriteLine();
+                Console.SetCursorPosition(17, 5);
+                Console.WriteLine("New High Score!");
+                Console.SetCursorPosition(13, 7);
+                Console.Write("Enter your name: ");
+                string playerName = Console.ReadLine();
+                while (topTenHighScore.ContainsKey(playerName))
+                {
+                    Console.SetCursorPosition(13, 9);
+                    Console.WriteLine("Was your previous best: {0} ?", topTenHighScore.Values.Max());
+                    Console.SetCursorPosition(21, 11);
+                    Console.Write("Y / N :  ");
+                    string yesNo = Console.ReadLine();
+                    switch (yesNo)
+                    {
+                        case "":
+                        case "Y":
+                        case "y":
+                        case "Yes":
+                        case "yes":
+                        case "YES":
+                            Console.Clear();
+                            topTenHighScore[playerName] = score;
+                            Console.SetCursorPosition(12, 1);
+                            Console.WriteLine("HIGH SCORES");
+                            foreach (var item in items)
+                            {
+                                Console.SetCursorPosition(4, 3 + counter);
+                                if (counter == 10)
+                                {
+                                    break;
+                                }
+                                counter++;
+                                Console.WriteLine("{0}. {1}{2}{3}{4}", counter, new string(' ', 2 - counter.ToString().Length), item.Key, new string(' ', 20 - item.Key.Length), item.Value);
+                                builder.Append(item.Value + Environment.NewLine + item.Key + Environment.NewLine);
+                            }
+                            File.WriteAllText("highscores2.txt", builder.ToString());
+                            builder.Clear();
+                            return;
+                        case "N":
+                        case "n":
+                        case "No":
+                        case "no":
+                        case "NO":
+                            Console.SetCursorPosition(13, 12);
+                            Console.Write("Choose another name: ");
+                            playerName = Console.ReadLine();
+                            break;
+                    }
+                }
+                topTenHighScore.Add(playerName, score);
+                counter = 0;
+                Console.Clear();
+                Console.SetCursorPosition(12, 1);
+                Console.WriteLine("HIGH SCORES");
+                foreach (var item in items)
+                {
+                    Console.SetCursorPosition(4, 3 + counter);
+                    if (counter == 10)
+                    {
+                        break;
+                    }
+                    counter++;
+                    Console.WriteLine("{0}. {1}{2}{3}{4}", counter, new string(' ', 2 - counter.ToString().Length), item.Key, new string(' ', 20 - item.Key.Length), item.Value);
+                    builder.Append(item.Value + Environment.NewLine + item.Key + Environment.NewLine);
+                }
+                File.WriteAllText("highscores2.txt", builder.ToString());
+                builder.Clear();
+            }
+
+            else if (score <= topTenHighScore.Values.Max())
+            {
+                Console.SetCursorPosition(13, 5);
+                Console.Write("Enter your name: ");
+                string playerName = Console.ReadLine();
+                while (topTenHighScore.ContainsKey(playerName))
+                {
+                    Console.SetCursorPosition(13, 7);
+                    Console.WriteLine("Was your previous best: {0} ?", topTenHighScore[playerName]);
+                    Console.SetCursorPosition(21, 9);
+                    Console.Write("Y / N :  ");
+                    string yesNo = Console.ReadLine();
+                    switch (yesNo)
+                    {
+                        case "":
+                        case "Y":
+                        case "y":
+                        case "Yes":
+                        case "yes":
+                        case "YES":
+                            topTenHighScore[playerName] = Math.Max(score, topTenHighScore[playerName]);
+                            counter = 0;
+                            Console.Clear();
+                            Console.SetCursorPosition(12, 1);
+                            Console.WriteLine("HIGH SCORES");
+                            foreach (var item in items)
+                            {
+                                Console.SetCursorPosition(4, 3 + counter);
+                                if (counter == 10)
+                                {
+                                    break;
+                                }
+                                counter++;
+                                Console.WriteLine("{0}. {1}{2}{3}{4}", counter, new string(' ', 2 - counter.ToString().Length), item.Key, new string(' ', 20 - item.Key.Length), item.Value);
+                                builder.Append(item.Value + Environment.NewLine + item.Key + Environment.NewLine);
+                            }
+                            File.WriteAllText("highscores2.txt", builder.ToString());
+                            builder.Clear();
+                            return;
+                        case "N":
+                        case "n":
+                        case "No":
+                        case "no":
+                        case "NO":
+                            Console.SetCursorPosition(13, 12);
+                            Console.Write("Choose another name: ");
+                            playerName = Console.ReadLine();
+                            break;
+                    }
+                }
+                topTenHighScore.Add(playerName, score);
+                counter = 0;
+                Console.Clear();
+                Console.SetCursorPosition(12, 1);
+                Console.WriteLine("HIGH SCORES");
+                foreach (var item in items)
+                {
+                    Console.SetCursorPosition(4, 3 + counter);
+                    if (counter == 10)
+                    {
+                        break;
+                    }
+                    counter++;
+                    Console.WriteLine("{0}. {1}{2}{3}{4}", counter, new string(' ', 2 - counter.ToString().Length), item.Key, new string(' ', 20 - item.Key.Length), item.Value);
+                    builder.Append(item.Value + Environment.NewLine + item.Key + Environment.NewLine);
+                }
+                File.WriteAllText("highscores2.txt", builder.ToString());
+                builder.Clear();
             }
         }
-
 
         private static void OpeningScreen()
         {
@@ -378,28 +513,3 @@ namespace SnakeProject
         }
     }
 }
-/*          //Unfinished
-            //To-Do's: Create new method TopTenHighScores, read player name, compare player score to high scores, print top scores accordingly.
-             
-            Dictionary<string, int> topTenHighScore = new Dictionary<string, int>();
-            var array = File.ReadAllLines("highscores2.txt");
-            for (var i = 0; i < array.Length; i += 2)
-            {
-                topTenHighScore.Add(array[i + 1], int.Parse(array[i]));
-                
-            }
-
-            var items = from pair in topTenHighScore orderby pair.Value descending select pair;
-
-            int counter = 1;
-
-            foreach (var item in items)
-            {
-                
-                Console.WriteLine("{0}.{1}{2}{3}{4}", counter,new string(' ',2 -counter.ToString().Length), item.Key,
-                new string(' ',15 - item.Key.Length), item.Value);
-                counter++;
-            }
-            
-            Console.WriteLine(topTenHighScore.Values.Min());
-*/
