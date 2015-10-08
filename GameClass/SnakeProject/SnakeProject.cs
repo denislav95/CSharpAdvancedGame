@@ -30,7 +30,6 @@ namespace SnakeProject
             Console.BufferWidth = Console.WindowWidth = 50;
 
             int score = 0;
-            string titleSpeed = "0";
             int lastFoodTime = 0;
             int savedDirection = 10;
             Console.Title = "Snake";
